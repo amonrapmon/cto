@@ -1,0 +1,320 @@
+# Yandex MCP Server - Git Ignore Configuration
+
+# =============================================================================
+# SECURITY - SENSITIVE DATA (CRITICAL)
+# =============================================================================
+# Never commit these files - they contain secrets and credentials
+
+# Environment files with secrets
+.env
+.env.local
+.env.*.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# API keys and tokens
+*.key
+*.pem
+*.cert
+secrets.json
+credentials.json
+auth.json
+
+# MCP client configs with real tokens
+# (Keep example configs, but not ones with actual credentials)
+*_config.local.json
+*_settings.local.json
+
+# =============================================================================
+# DEPENDENCIES
+# =============================================================================
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.npm
+.yarn/
+.pnp.*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+.venv
+pip-log.txt
+pip-delete-this-directory.txt
+Pipfile.lock
+poetry.lock
+
+# =============================================================================
+# BUILD OUTPUTS
+# =============================================================================
+
+# Compiled files
+dist/
+build/
+out/
+*.o
+*.a
+*.lib
+*.exe
+*.dll
+*.dylib
+
+# TypeScript
+*.tsbuildinfo
+tsconfig.tsbuildinfo
+
+# Python builds
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+wheels/
+share/python-wheels/
+*.manifest
+*.spec
+
+# =============================================================================
+# TESTING
+# =============================================================================
+
+# Coverage reports
+coverage/
+*.coverage
+.coverage.*
+htmlcov/
+.nyc_output
+.lcov
+*.lcov
+.pytest_cache/
+.hypothesis/
+
+# Test outputs
+test-results/
+test-reports/
+junit.xml
+
+# =============================================================================
+# EDITOR & IDE
+# =============================================================================
+
+# Visual Studio Code
+.vscode/
+!.vscode/settings.example.json
+!.vscode/launch.example.json
+*.code-workspace
+
+# JetBrains IDEs (WebStorm, PyCharm, IntelliJ, etc.)
+.idea/
+*.iml
+*.iws
+*.ipr
+.idea_modules/
+
+# Sublime Text
+*.sublime-workspace
+*.sublime-project
+
+# Vim
+*.swp
+*.swo
+*~
+.*.sw[a-z]
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+auto-save-list
+tramp
+.\#*
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+.directory
+.Trash-*
+
+# =============================================================================
+# LOGGING
+# =============================================================================
+
+# Log files
+*.log
+logs/
+*.log.*
+npm-debug.log*
+yarn-debug.log*
+lerna-debug.log*
+pnpm-debug.log*
+
+# Runtime logs
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# =============================================================================
+# TEMPORARY FILES
+# =============================================================================
+
+# Temp directories
+tmp/
+temp/
+.tmp/
+.cache/
+
+# OS temp files
+*.tmp
+*.temp
+*.bak
+*.backup
+
+# =============================================================================
+# DATABASE & DATA
+# =============================================================================
+
+# Local databases
+*.sqlite
+*.sqlite3
+*.db
+*.db-shm
+*.db-wal
+
+# Data files (unless needed for tests)
+data/
+*.csv
+*.json.local
+
+# =============================================================================
+# DOCUMENTATION BUILDS
+# =============================================================================
+
+# Generated docs
+docs/_build/
+docs/.doctrees/
+site/
+_site/
+
+# =============================================================================
+# PACKAGE MANAGER
+# =============================================================================
+
+# Package lock files (uncomment if you want to ignore them)
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+# =============================================================================
+# MISCELLANEOUS
+# =============================================================================
+
+# Debug artifacts
+debug/
+*.debug
+
+# Profiling outputs
+*.prof
+*.profile
+
+# Benchmark results
+benchmark/
+benchmarks/
+
+# Local configuration overrides
+config.local.*
+settings.local.*
+
+# Generated files
+generated/
+.generated/
+
+# Docker artifacts (if applicable)
+# .dockerignore already handles docker-specific ignores
+*.pid
+*.seed
+*.pid.lock
+
+# Kubernetes secrets (if applicable)
+secrets/
+*.secret.yaml
+
+# Terraform state (if applicable)
+.terraform/
+*.tfstate
+*.tfstate.backup
+
+# =============================================================================
+# PROJECT SPECIFIC
+# =============================================================================
+
+# MCP server specific temp files
+mcp-cache/
+.mcp-temp/
+
+# Test fixtures with real data (keep example fixtures)
+tests/fixtures/*.local.*
+
+# Local development overrides
+*.local
+
+# Backup files
+*.orig
+
+# =============================================================================
+# KEEP THESE FILES (Use ! to negate ignore)
+# =============================================================================
+
+# Keep example/template files
+!.env.example
+!claude_desktop_config.json
+!gemini_settings.json
+!*.example.*
+!*.template.*
+
+# Keep test fixtures (example data)
+!tests/fixtures/*.json
+!tests/fixtures/*.yaml
+
+# Keep CI/CD configs
+!.github/
+!.gitlab-ci.yml
+!.circleci/
+
+# Keep documentation
+!README.md
+!CONTRIBUTING.md
+!LICENSE
+!CHANGELOG.md
+!docs/
+
+# =============================================================================
