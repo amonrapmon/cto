@@ -1,0 +1,178 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "mcp_servers": {
+    "yandex": {
+      "type": "stdio",
+      "command": [
+        "node",
+        "/absolute/path/to/cto/dist/index.js"
+      ],
+      "env": {
+        "YANDEX_OAUTH_TOKEN": "your_yandex_oauth_token_here"
+      },
+      "enabled": true,
+      "timeout": 30000,
+      "retry": {
+        "max_attempts": 3,
+        "backoff_multiplier": 2
+      }
+    }
+  },
+  "_metadata": {
+    "description": "Sample Gemini MCP integration settings for Yandex MCP Server",
+    "version": "1.0.0",
+    "last_updated": "2024"
+  },
+  "_instructions": {
+    "setup": [
+      "1. Configure this file in your Gemini client's MCP settings location",
+      "2. Update the 'command' array with the absolute path to your server binary/script",
+      "3. Replace 'your_yandex_oauth_token_here' with your actual OAuth token",
+      "4. Adjust timeout and retry settings based on your network/API performance",
+      "5. For Python: change command to ['python3', '/path/to/src/main.py']",
+      "6. Save and restart your Gemini client to apply changes"
+    ],
+    "field_descriptions": {
+      "type": "Transport type - 'stdio' for standard input/output communication",
+      "command": "Array containing the executable and path to server script",
+      "env": "Environment variables for the server process (tokens, config, etc.)",
+      "enabled": "Boolean to enable/disable the server without removing configuration",
+      "timeout": "Maximum time (ms) to wait for server responses before timing out",
+      "retry": "Retry policy configuration for failed requests"
+    }
+  },
+  "_examples": {
+    "nodejs_implementation": {
+      "type": "stdio",
+      "command": ["node", "/Users/username/projects/cto/dist/index.js"],
+      "env": {
+        "YANDEX_OAUTH_TOKEN": "your_token_here"
+      }
+    },
+    "python_module": {
+      "type": "stdio",
+      "command": ["python3", "-m", "mcp_yandex"],
+      "env": {
+        "YANDEX_OAUTH_TOKEN": "your_token_here",
+        "PYTHONPATH": "/Users/username/projects/cto"
+      }
+    },
+    "python_script": {
+      "type": "stdio",
+      "command": ["python3", "/Users/username/projects/cto/src/main.py"],
+      "env": {
+        "YANDEX_OAUTH_TOKEN": "your_token_here",
+        "LOG_LEVEL": "info"
+      }
+    },
+    "with_working_directory": {
+      "type": "stdio",
+      "command": ["node", "dist/index.js"],
+      "cwd": "/Users/username/projects/cto",
+      "env": {
+        "YANDEX_OAUTH_TOKEN": "your_token_here"
+      }
+    },
+    "production_settings": {
+      "type": "stdio",
+      "command": ["node", "/opt/mcp_servers/yandex/dist/index.js"],
+      "env": {
+        "YANDEX_OAUTH_TOKEN": "your_production_token",
+        "NODE_ENV": "production",
+        "LOG_LEVEL": "warn"
+      },
+      "enabled": true,
+      "timeout": 60000,
+      "retry": {
+        "max_attempts": 5,
+        "backoff_multiplier": 2,
+        "initial_delay": 1000,
+        "max_delay": 30000
+      }
+    }
+  },
+  "_platform_specific": {
+    "windows": {
+      "command": ["node.exe", "C:\\Users\\username\\projects\\cto\\dist\\index.js"],
+      "env": {
+        "YANDEX_OAUTH_TOKEN": "your_token_here"
+      }
+    },
+    "macos": {
+      "command": ["node", "/Users/username/projects/cto/dist/index.js"],
+      "env": {
+        "YANDEX_OAUTH_TOKEN": "your_token_here"
+      }
+    },
+    "linux": {
+      "command": ["node", "/home/username/projects/cto/dist/index.js"],
+      "env": {
+        "YANDEX_OAUTH_TOKEN": "your_token_here"
+      }
+    }
+  },
+  "_advanced_options": {
+    "custom_environment": {
+      "type": "stdio",
+      "command": ["node", "/path/to/cto/dist/index.js"],
+      "env": {
+        "YANDEX_OAUTH_TOKEN": "your_token",
+        "NODE_OPTIONS": "--max-old-space-size=4096",
+        "LOG_LEVEL": "debug",
+        "MAX_RETRIES": "5",
+        "RATE_LIMIT_PER_SECOND": "10"
+      },
+      "enabled": true,
+      "timeout": 45000,
+      "retry": {
+        "max_attempts": 5,
+        "backoff_multiplier": 1.5,
+        "initial_delay": 500,
+        "max_delay": 15000
+      }
+    }
+  },
+  "_security_notes": [
+    "⚠️  CRITICAL: Never commit this file with real OAuth tokens to version control",
+    "⚠️  Store tokens in secure environment variables or secret management systems",
+    "⚠️  Use different tokens for development, staging, and production environments",
+    "⚠️  Regularly rotate OAuth tokens to minimize security risks",
+    "⚠️  Limit OAuth token scopes to only what's necessary for your use case",
+    "⚠️  Monitor token usage and revoke immediately if compromise is suspected"
+  ],
+  "_troubleshooting": {
+    "connection_issues": [
+      "Verify the command path is correct and executable exists",
+      "Check that all required dependencies are installed",
+      "Ensure the server process has proper permissions",
+      "Try running the command manually to test for errors"
+    ],
+    "authentication_failures": [
+      "Confirm the OAuth token is valid and not expired",
+      "Verify the token has required scopes/permissions",
+      "Check for typos in the token value",
+      "Try generating a new token from Yandex OAuth console"
+    ],
+    "timeout_errors": [
+      "Increase the timeout value if operations are legitimately slow",
+      "Check network connectivity to Yandex APIs",
+      "Monitor for rate limiting from Yandex",
+      "Review server logs for performance bottlenecks"
+    ],
+    "server_crashes": [
+      "Enable debug logging to capture error details",
+      "Verify all environment variables are set correctly",
+      "Check system resources (memory, CPU)",
+      "Review compatibility of dependencies"
+    ]
+  },
+  "_references": [
+    "Project README: ./README.md",
+    "Contributing Guidelines: ./CONTRIBUTING.md",
+    "Environment Template: ./.env.example",
+    "Claude Desktop Config: ./claude_desktop_config.json",
+    "MCP Specification: https://spec.modelcontextprotocol.io/",
+    "Yandex OAuth: https://yandex.com/dev/oauth/",
+    "Yandex API Docs: https://yandex.com/dev/"
+  ]
+}

@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "mcpServers": {
+    "yandex": {
+      "command": "node",
+      "args": [
+        "/absolute/path/to/cto/dist/index.js"
+      ],
+      "env": {
+        "YANDEX_OAUTH_TOKEN": "your_yandex_oauth_token_here"
+      },
+      "disabled": false,
+      "alwaysAllow": []
+    }
+  },
+  "_comments": {
+    "description": "Sample Claude Desktop MCP configuration for Yandex MCP Server",
+    "installation": [
+      "1. Copy this configuration structure to your Claude Desktop config file:",
+      "   - macOS: ~/Library/Application Support/Claude/claude_desktop_config.json",
+      "   - Windows: %APPDATA%\\Claude\\claude_desktop_config.json",
+      "   - Linux: ~/.config/Claude/claude_desktop_config.json",
+      "2. Update the 'args' array with the absolute path to your built server file",
+      "3. Replace 'your_yandex_oauth_token_here' with your actual Yandex OAuth token",
+      "4. For Python implementation, change 'command' to 'python' or 'python3'",
+      "   and update args to: ['path/to/src/main.py'] or ['-m', 'mcp_yandex']",
+      "5. Restart Claude Desktop for changes to take effect"
+    ],
+    "fields": {
+      "command": "The executable to run (node, python, python3, or absolute path to binary)",
+      "args": "Array of command-line arguments. Must include absolute path to server entry point",
+      "env": "Environment variables passed to the server process. Add your OAuth token here",
+      "disabled": "Set to true to temporarily disable this MCP server without removing the config",
+      "alwaysAllow": "Array of tool names that should be auto-approved without user confirmation"
+    },
+    "examples": {
+      "node": {
+        "command": "node",
+        "args": ["/Users/username/projects/cto/dist/index.js"]
+      },
+      "python_module": {
+        "command": "python3",
+        "args": ["-m", "mcp_yandex"],
+        "cwd": "/Users/username/projects/cto"
+      },
+      "python_script": {
+        "command": "python3",
+        "args": ["/Users/username/projects/cto/src/main.py"]
+      },
+      "with_additional_env": {
+        "command": "node",
+        "args": ["/path/to/cto/dist/index.js"],
+        "env": {
+          "YANDEX_OAUTH_TOKEN": "your_token",
+          "LOG_LEVEL": "debug",
+          "NODE_ENV": "production"
+        }
+      }
+    },
+    "security": [
+      "⚠️  NEVER commit this file with real tokens to version control",
+      "⚠️  Use environment-specific tokens (development vs production)",
+      "⚠️  Rotate tokens periodically for security",
+      "⚠️  Restrict OAuth token scopes to minimum required permissions"
+    ],
+    "troubleshooting": {
+      "server_not_appearing": "Check JSON syntax, verify absolute paths, restart Claude Desktop",
+      "authentication_errors": "Verify token is valid and has required scopes/permissions",
+      "server_crashes": "Check Claude Desktop logs, enable debug logging, verify dependencies installed",
+      "permission_denied": "Ensure OAuth token has necessary scopes for the operations you're performing"
+    },
+    "references": [
+      "MCP Documentation: https://modelcontextprotocol.io",
+      "Claude MCP Guide: https://docs.anthropic.com/claude/docs/mcp",
+      "Project README: ./README.md",
+      "Environment Setup: ./.env.example"
+    ]
+  }
+}
