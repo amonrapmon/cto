@@ -268,6 +268,266 @@ logger.info(f"Server name: Yandex MCP Server v1.0.0")
 logger.info(f"Debug mode: {Config.DEBUG}")
 
 # =============================================================================
+# TOOLS
+# =============================================================================
+
+@mcp.tool()
+async def get_keyword_suggestions(keywords: list[str], region_ids: list[int] = None) -> str:
+    """
+    Get keyword suggestions and related keywords from Yandex Wordstat.
+    
+    Args:
+        keywords: List of seed keywords to get suggestions for
+        region_ids: Optional list of Yandex region IDs (default: [225] for Russia)
+    
+    Returns:
+        Formatted string with keyword suggestions including search volume
+    """
+    if region_ids is None:
+        region_ids = [225]  # Default to Russia
+    
+    payload = {
+        "method": "get",
+        "params": {
+            "Keywords": keywords,
+            "RegionIds": region_ids
+        }
+    }
+    
+    result = await make_wordstat_request("", payload)
+    
+    # Format the response
+    if "result" in result and "SearchedWith" in result["result"]:
+        suggestions = result["result"]["SearchedWith"]
+        if not suggestions:  # Empty list
+            return "No suggestions found"
+        output = f"Keyword suggestions for: {', '.join(keywords)}\n\n"
+        for item in suggestions[:20]:  # Limit to first 20
+            keyword = item.get("Keyword", "")
+            shows = item.get("Shows", 0)
+            output += f"- {keyword}: {shows:,} monthly searches\n"
+        return output
+    
+    return "No suggestions found"
+
+
+@mcp.tool()
+async def get_search_volume(keywords: list[str], region_ids: list[int] = None) -> str:
+    """
+    Get search volume statistics for specific keywords.
+    
+    Args:
+        keywords: List of keywords to check search volume for
+        region_ids: Optional list of Yandex region IDs (default: [225] for Russia)
+    
+    Returns:
+        Formatted string with search volumes and dates
+    """
+    if region_ids is None:
+        region_ids = [225]
+    
+    payload = {
+        "method": "get",
+        "params": {
+            "Keywords": keywords,
+            "RegionIds": region_ids
+        }
+    }
+    
+    result = await make_wordstat_request("", payload)
+    
+    # Format the response with volume data
+    if "result" in result and "SearchedWith" in result["result"]:
+        output = "Search Volume Data:\n\n"
+        for item in result["result"]["SearchedWith"]:
+            keyword = item.get("Keyword", "")
+            shows = item.get("Shows", 0)
+            output += f"Keyword: {keyword}\n"
+            output += f"  Monthly searches: {shows:,}\n"
+            if "Dynamics" in item:
+                output += "  Trend data available\n"
+            output += "\n"
+        return output
+    
+    return "No search volume data found"
+
+
+@mcp.tool()
+async def get_keyword_stats(keyword: str, region_ids: list[int] = None, 
+                           start_date: str = None, end_date: str = None) -> str:
+    """
+    Get detailed statistics for a keyword including trends and related queries.
+    
+    Args:
+        keyword: The keyword to analyze
+        region_ids: Optional list of Yandex region IDs (default: [225] for Russia)
+        start_date: Optional start date in YYYY-MM-DD format
+        end_date: Optional end date in YYYY-MM-DD format
+    
+    Returns:
+        Formatted string with detailed statistics including counts and dates
+    """
+    if region_ids is None:
+        region_ids = [225]
+    
+    params = {
+        "Keywords": [keyword],
+        "RegionIds": region_ids
+    }
+    
+    if start_date:
+        params["StartDate"] = start_date
+    if end_date:
+        params["EndDate"] = end_date
+    
+    payload = {
+        "method": "get",
+        "params": params
+    }
+    
+    result = await make_wordstat_request("", payload)
+    
+    # Format detailed statistics
+    output = f"Detailed Statistics for: {keyword}\n"
+    output += "=" * 50 + "\n\n"
+    
+    if "result" in result:
+        data = result["result"]
+        
+        if "SearchedWith" in data:
+            output += "Related Keywords:\n"
+            for item in data["SearchedWith"][:10]:
+                kw = item.get("Keyword", "")
+                shows = item.get("Shows", 0)
+                output += f"  - {kw}: {shows:,} searches\n"
+            output += "\n"
+        
+        if "SearchedAlso" in data:
+            output += "Users Also Searched:\n"
+            for item in data["SearchedAlso"][:10]:
+                kw = item.get("Keyword", "")
+                shows = item.get("Shows", 0)
+                output += f"  - {kw}: {shows:,} searches\n"
+            output += "\n"
+        
+        if start_date and end_date:
+            output += f"Period: {start_date} to {end_date}\n"
+    
+    return output
+
+
+@mcp.tool()
+async def get_related_keywords(keyword: str, region_ids: list[int] = None, 
+                              max_results: int = 20) -> str:
+    """
+    Get keywords related to the specified keyword.
+    
+    Args:
+        keyword: The seed keyword
+        region_ids: Optional list of Yandex region IDs (default: [225] for Russia)
+        max_results: Maximum number of results to return (default: 20)
+    
+    Returns:
+        Formatted string with related keywords, their search counts, and relevance
+    """
+    if region_ids is None:
+        region_ids = [225]
+    
+    payload = {
+        "method": "get",
+        "params": {
+            "Keywords": [keyword],
+            "RegionIds": region_ids
+        }
+    }
+    
+    result = await make_wordstat_request("", payload)
+    
+    # Format related keywords
+    output = f"Related Keywords for: {keyword}\n"
+    output += "=" * 50 + "\n\n"
+    
+    if "result" in result:
+        data = result["result"]
+        
+        if "SearchedAlso" in data:
+            output += "Related searches:\n"
+            count = 0
+            for item in data["SearchedAlso"]:
+                if count >= max_results:
+                    break
+                kw = item.get("Keyword", "")
+                shows = item.get("Shows", 0)
+                output += f"  {count + 1}. {kw}\n"
+                output += f"     Monthly searches: {shows:,}\n"
+                count += 1
+            output += "\n"
+        
+        total_found = len(data.get("SearchedAlso", []))
+        output += f"Total related keywords found: {total_found}\n"
+        if total_found > max_results:
+            output += f"(Showing top {max_results})\n"
+    
+    return output
+
+
+# =============================================================================
+# RESOURCES
+# =============================================================================
+
+@mcp.resource("wordstat://info")
+async def get_wordstat_info() -> str:
+    """
+    Provides information about the Yandex Wordstat integration.
+    
+    Returns:
+        Information about available tools, API limits, and usage guidelines
+    """
+    return """# Yandex Wordstat MCP Server Information
+
+## Overview
+This server provides access to Yandex Wordstat API for keyword research and search volume analysis.
+
+## Available Tools
+
+1. **get_keyword_suggestions**
+   - Get keyword suggestions and related keywords
+   - Parameters: keywords (list), region_ids (optional)
+   - Returns: Keyword suggestions with monthly search volumes
+
+2. **get_search_volume**
+   - Get search volume statistics for specific keywords
+   - Parameters: keywords (list), region_ids (optional)
+   - Returns: Search volume data with trends
+
+3. **get_keyword_stats**
+   - Get detailed statistics for a keyword including trends
+   - Parameters: keyword (string), region_ids (optional), start_date (optional), end_date (optional)
+   - Returns: Detailed statistics with related queries and trend data
+
+4. **get_related_keywords**
+   - Get keywords related to a specified keyword
+   - Parameters: keyword (string), region_ids (optional), max_results (optional)
+   - Returns: Related keywords with search counts and relevance
+
+## Region IDs
+- 225: Russia (default)
+- 213: Moscow
+- 2: Saint Petersburg
+- 1: Moscow and Moscow Oblast
+- See Yandex documentation for complete list
+
+## API Limits
+- Rate limiting applies per OAuth token
+- Respect Yandex API quotas and limits
+- See README.md for quota information
+
+## Authentication
+Requires valid YANDEX_OAUTH_TOKEN environment variable.
+See README.md for setup instructions.
+"""
+
+# =============================================================================
 # ENTRY POINT
 # =============================================================================
 
