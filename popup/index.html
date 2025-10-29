@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UNO RANDOM – Генератор текста</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="popup-container">
+    <header class="popup-header">
+      <div class="branding">
+        <span class="logo">UNO RANDOM</span>
+        <span class="tagline">Генератор текста</span>
+      </div>
+      <div class="toggles">
+        <label class="theme-toggle" title="Переключить тему">
+          <input type="checkbox" id="themeToggle">
+          <span class="toggle-thumb" aria-hidden="true"></span>
+          <span class="toggle-label">🌙</span>
+        </label>
+      </div>
+    </header>
+
+    <nav class="tabs" role="tablist">
+      <button class="tab-button active" role="tab" aria-selected="true" data-tab="basic">Базовая</button>
+      <button class="tab-button" role="tab" aria-selected="false" data-tab="advanced">Расширенная</button>
+    </nav>
+
+    <section class="tab-panel active" data-tab="basic" role="tabpanel">
+      <div class="input-header">
+        <label for="input-basic">Исходный текст</label>
+        <span class="char-counter" data-counter="basic">0/2000</span>
+      </div>
+      <textarea id="input-basic" maxlength="2000" placeholder="Введите текст для рандомизации"></textarea>
+      <p class="helper-text">Инструмент создаёт лёгкие вариации текста с заменой символов и добавлением эмодзи. Подходит для постов, комментариев и сообщений.</p>
+    </section>
+
+    <section class="tab-panel" data-tab="advanced" role="tabpanel">
+      <div class="input-header">
+        <label for="input-advanced">Расширенный текст</label>
+        <span class="char-counter" data-counter="advanced">0/2000</span>
+      </div>
+      <textarea id="input-advanced" maxlength="2000" placeholder="Используйте шаблоны вида [вариант1|вариант2]"></textarea>
+      <p class="helper-text">
+        Синтаксис шаблонов: заключайте варианты в квадратные скобки с разделителем “|”, например: Привет, [друзья|команда]! ♻️
+      </p>
+    </section>
+
+    <section class="settings" aria-label="Настройки интенсивности">
+      <div class="setting">
+        <div class="setting-info">
+          <span class="setting-title">Замены букв</span>
+          <span class="setting-value" id="replacementValue">30%</span>
+        </div>
+        <input type="range" id="replacementSlider" min="0" max="100" step="5" value="30">
+      </div>
+      <div class="setting">
+        <div class="setting-info">
+          <span class="setting-title">Частота эмодзи</span>
+          <span class="setting-value" id="emojiValue">1/6 слов</span>
+        </div>
+        <input type="range" id="emojiSlider" min="0" max="12" step="1" value="6">
+        <p class="setting-hint">0 — без эмодзи, чем меньше число, тем чаще появляются эмодзи.</p>
+      </div>
+    </section>
+
+    <div class="actions">
+      <button id="generateButton" class="primary">Сгенерировать</button>
+      <div id="postActions" class="post-actions" hidden>
+        <button id="regenerateButton" class="primary">Сгенерировать ещё</button>
+        <button id="copyButton" class="secondary">Скопировать</button>
+      </div>
+    </div>
+
+    <div id="errorMessage" class="error-message" role="alert" aria-live="polite"></div>
+
+    <div id="resultContainer" class="result" tabindex="0" role="textbox" aria-label="Результат генерации">
+      <span class="placeholder">Готовый текст появится здесь.</span>
+    </div>
+
+    <p class="keyboard-hint">Сочетание Ctrl+Enter запускает генерацию.</p>
+  </div>
+
+  <a href="https://www.buymeacoffee.com/" class="donate-link" id="donateLink" title="Поддержать разработчика ❤️" target="_blank" rel="noopener noreferrer">❤️</a>
+
+  <script src="script.js"></script>
+</body>
+</html>
